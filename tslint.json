@@ -9,6 +9,7 @@
   "rules": {
     "typedef": [false, "variable-declaration"],
     "object-literal-sort-keys": false,
-    "interface-name": false
+    "interface-name": false,
+    "jsx-no-lambda": false
   }
 }

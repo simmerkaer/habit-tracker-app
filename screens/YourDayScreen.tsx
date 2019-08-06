@@ -1,12 +1,16 @@
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "../hooks/useNavigation";
 
-const HomeScreen = () => {
+const YourDayScreen = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Text>Home Screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate("HabitOverviewScreen")}
+      />
     </View>
   );
 };
@@ -20,7 +24,7 @@ const styles = StyleSheet.create({
   }
 });
 
-HomeScreen.navigationOptions = {
-  title: "HomeScreen"
+YourDayScreen.navigationOptions = {
+  title: "Your Day"
 };
-export default HomeScreen;
+export default YourDayScreen;

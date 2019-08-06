@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
 });
 
 HabitOverviewScreen.navigationOptions = {
-  title: "Habit Overview"
+  title: "Habit Overview",
+  headerTitle: "Test"
 };
 
 export default HabitOverviewScreen;

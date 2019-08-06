@@ -1,0 +1,14 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-config-prettier",
+    "tslint-react-hooks"
+  ],
+  "rules": {
+    "typedef": [false, "variable-declaration"],
+    "object-literal-sort-keys": false,
+    "interface-name": false
+  }
+}

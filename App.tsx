@@ -1,19 +1,12 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { createAppContainer, createBottomTabNavigator } from "react-navigation";
+import HabitDetail from "./screens/HabitDetail";
+import HomeScreen from "./screens/HomeScreen";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const MainNavigator = createBottomTabNavigator({
+  Home: HomeScreen,
+  HabitDetail
 });
+
+const App = createAppContainer(MainNavigator);
+
+export default App;

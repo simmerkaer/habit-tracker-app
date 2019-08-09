@@ -10,6 +10,8 @@
     "typedef": [false, "variable-declaration"],
     "object-literal-sort-keys": false,
     "interface-name": false,
-    "jsx-no-lambda": false
+    "jsx-no-lambda": false,
+    "no-console": false,
+    "variable-name": false
   }
 }

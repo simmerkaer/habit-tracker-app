@@ -1,15 +1,20 @@
 import * as React from "react";
+import { useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
-import { useNavigation } from "../hooks/useNavigation";
+import AddHabitModal from "../components/AddHabitModal";
 
 const HabitOverviewScreen = () => {
-  const navigation = useNavigation();
+  const [showModal, setShowModal] = useState(false);
+  const [habits, setHabits] = useState([]);
+
   return (
     <View style={styles.container}>
       <Text>Habit details</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate("YourDayScreen")}
+      <Button title="Add habit" onPress={() => setShowModal(true)} />
+      <AddHabitModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={() => null}
       />
     </View>
   );

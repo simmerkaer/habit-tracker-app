@@ -5,7 +5,7 @@ interface Habit {
   startDate: Date;
   endDate: Date;
   days: boolean[];
-  active: Days[];
+  activeDays: Days[];
 }
 
 export default Habit;

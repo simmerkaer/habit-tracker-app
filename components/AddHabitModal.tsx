@@ -11,8 +11,19 @@ import {
 } from "react-native";
 import Days from "../models/Days";
 import { DateToString, DaysBetween } from "../utils/DateHelpers";
+import Habit from "./../models/Habit";
 
-const AddHabitModal = ({ visible, onClose, onSubmit }) => {
+interface AddHabitModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onSubmit: (habit: Habit) => void;
+}
+
+const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
+  visible,
+  onClose,
+  onSubmit
+}) => {
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -30,7 +41,6 @@ const AddHabitModal = ({ visible, onClose, onSubmit }) => {
         const { day, month, year } = result;
         const date = new Date(year, month, day);
         setStartDate(date);
-        setHabitDays();
       }
     } catch ({ code, message }) {
       console.warn("Cannot open date picker", message);
@@ -48,7 +58,6 @@ const AddHabitModal = ({ visible, onClose, onSubmit }) => {
         const { day, month, year } = result;
         const date = new Date(year, month, day);
         setEndDate(date);
-        setHabitDays();
       }
     } catch ({ code, message }) {
       console.warn("Cannot open date picker", message);
@@ -57,7 +66,7 @@ const AddHabitModal = ({ visible, onClose, onSubmit }) => {
 
   const setHabitDays = () => {
     const amountOfDays = DaysBetween(startDate, endDate);
-    setDays(Array(amountOfDays).fill(false));
+    return Array(amountOfDays + 1).fill(false); // We add 1 so the last day is added aswell
   };
 
   const handleWeekdayPress = (index: number) => {
@@ -66,49 +75,58 @@ const AddHabitModal = ({ visible, onClose, onSubmit }) => {
     setActiveDays(newActiveDays);
   };
 
+  const handleSubmit = () => {
+    const habit: Habit = {
+      title,
+      startDate,
+      endDate,
+      days: setHabitDays(),
+      activeDays
+    };
+    console.log(habit);
+
+    onSubmit(habit);
+    onClose();
+  };
+
   return (
     <Modal
       animationType="slide"
       transparent={false}
-      visible={true}
+      visible={visible}
       onRequestClose={onClose}
     >
       <View style={styles.container}>
+        <TextInput
+          onChangeText={text => setTitle(text)}
+          value={title}
+          placeholder="Title"
+        />
+
         <View>
-          <TextInput
-            onChangeText={text => setTitle(text)}
-            value={title}
-            placeholder="Title"
-          />
+          <Button title="Set start date" onPress={setStartDateFunction} />
+          <Text>{DateToString(startDate)}</Text>
+        </View>
+        <View>
+          <Button title="Set end date" onPress={setEndDateFunction} />
+          <Text>{DateToString(endDate)}</Text>
+        </View>
 
-          <View>
-            <Button title="Set start date" onPress={setStartDateFunction} />
-            <Text>{DateToString(startDate)}</Text>
-          </View>
-          <View>
-            <Button title="Set end date" onPress={setEndDateFunction} />
-            <Text>{DateToString(endDate)}</Text>
-          </View>
-
-          <View style={styles.weekdayContainer}>
-            {activeDays.map((isActive, index) => (
-              <View key={index}>
-                <Text>{Days[index].slice(0, 3)}</Text>
-                <TouchableHighlight
-                  style={styles.weekday}
-                  onPress={() => handleWeekdayPress(index)}
-                >
-                  <View>
-                    {isActive && <View style={styles.activeWeekday} />}
-                  </View>
-                </TouchableHighlight>
-              </View>
-            ))}
-          </View>
-          {/* 
-          <View>
-            <Button title="Add" onPress={() => null} />
-          </View> */}
+        <View style={styles.weekdayContainer}>
+          {activeDays.map((isActive, index) => (
+            <View key={index}>
+              <Text>{Days[index].slice(0, 3)}</Text>
+              <TouchableHighlight
+                style={styles.weekday}
+                onPress={() => handleWeekdayPress(index)}
+              >
+                <View>{isActive && <View style={styles.activeWeekday} />}</View>
+              </TouchableHighlight>
+            </View>
+          ))}
+        </View>
+        <View style={styles.addButton}>
+          <Button title="Add" onPress={handleSubmit} />
         </View>
       </View>
     </Modal>
@@ -121,9 +139,10 @@ const styles = StyleSheet.create({
     flexDirection: "column"
   },
   weekdayContainer: {
-    flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    borderColor: "black",
+    borderWidth: 1
   },
   weekday: {
     height: 50,
@@ -134,7 +153,8 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     backgroundColor: "red"
-  }
+  },
+  addButton: {}
 });
 
 export default AddHabitModal;

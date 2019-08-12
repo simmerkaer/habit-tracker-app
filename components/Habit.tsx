@@ -41,10 +41,6 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
     }
   };
 
-  const getDayDate = (date: Date) => {
-    return date.getDate();
-  };
-
   return (
     <View style={styles.habitContainer}>
       <View style={styles.habitHeader}>

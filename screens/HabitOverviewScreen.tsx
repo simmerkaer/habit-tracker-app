@@ -10,9 +10,9 @@ import {
 } from "react-native";
 import AddHabitModal from "../components/AddHabitModal";
 import { HABIT_KEY_PREFIX } from "../contants";
+import HabitModel from "../models/HabitModel";
 import { getHabitKey } from "../utils/HabitKey";
 import HabitComponent from "./../components/Habit";
-import HabitModel from "./../models/Habit";
 
 const HabitOverviewScreen = () => {
   const [showModal, setShowModal] = useState(false);
@@ -27,10 +27,20 @@ const HabitOverviewScreen = () => {
       const habitsFromLocalStorage: HabitModel[] = allHabits.map(x =>
         JSON.parse(x[1])
       );
+
+      // Convert JSON-strings back to javascript dates.
+      habitsFromLocalStorage.forEach(convertToDates);
+
       return habitsFromLocalStorage;
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const convertToDates = (habit: HabitModel) => {
+    habit.startDate = new Date(habit.startDate);
+    habit.endDate = new Date(habit.endDate);
+    habit.days.forEach(day => (day.date = new Date(day.date)));
   };
 
   useEffect(() => {
@@ -38,7 +48,6 @@ const HabitOverviewScreen = () => {
     const fetchHabits = async () => {
       const fetchedHabits = await getAllHabitsFromLocalStorage();
       setHabits(fetchedHabits);
-      console.log(fetchedHabits);
     };
 
     fetchHabits();
@@ -66,9 +75,14 @@ const HabitOverviewScreen = () => {
     setHabits(newHabits);
   };
 
+  const delete2 = async () => {
+    AsyncStorage.clear();
+  };
+
   return (
     <View style={styles.container}>
       <Button title="Add habit" onPress={() => setShowModal(true)} />
+      <Button title="delete" onPress={delete2} />
       <ScrollView style={{ marginTop: 10 }}>
         <View style={styles.habitsContainer}>
           {habits.map(habit => (

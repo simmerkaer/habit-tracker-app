@@ -1,12 +1,23 @@
 import * as React from "react";
 import { StyleSheet, Text, TouchableHighlight } from "react-native";
 
-const Day = ({ children, index, state, onDayToggle }) => {
+interface DayProps {
+  index: number;
+  active: boolean;
+  onDayToggle: (index: number) => void;
+}
+
+const Day: React.FunctionComponent<DayProps> = ({
+  children,
+  index,
+  active,
+  onDayToggle
+}) => {
   const handlePress = () => onDayToggle(index);
 
   return (
     <TouchableHighlight
-      style={[styles.square, state ? styles.squareOn : styles.squareOff]}
+      style={[styles.square, active ? styles.squareOn : styles.squareOff]}
       onPress={handlePress}
     >
       <Text>{children}</Text>

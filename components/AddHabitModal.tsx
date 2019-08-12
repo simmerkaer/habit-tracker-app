@@ -10,8 +10,9 @@ import {
   View
 } from "react-native";
 import Days from "../models/Days";
+import HabitModel from "../models/HabitModel";
 import { DateToString, DaysBetween } from "../utils/DateHelpers";
-import HabitModel from "./../models/Habit";
+import { HabitDayModel } from "./../models/HabitDayModel";
 
 interface AddHabitModalProps {
   visible: boolean;
@@ -64,9 +65,17 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
     }
   };
 
-  const setHabitDays = () => {
-    const amountOfDays = DaysBetween(startDate, endDate);
-    return Array(amountOfDays + 1).fill(false); // We add 1 so the last day is added aswell
+  const getDateArray = (startDate: Date, endDate: Date) => {
+    const arr = new Array<HabitDayModel>();
+    const dt = new Date(startDate);
+    while (dt <= endDate) {
+      arr.push({
+        date: new Date(dt),
+        active: false
+      });
+      dt.setDate(dt.getDate() + 1);
+    }
+    return arr;
   };
 
   const handleWeekdayPress = (index: number) => {
@@ -80,10 +89,9 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
       title,
       startDate,
       endDate,
-      days: setHabitDays(),
+      days: getDateArray(startDate, endDate),
       activeDays
     };
-    console.log(habit);
 
     onSubmit(habit);
     onClose();

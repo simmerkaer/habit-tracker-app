@@ -1,8 +1,9 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { AsyncStorage, Button, StyleSheet, Text, View } from "react-native";
+import { HabitDayModel } from "../models/HabitDayModel";
+import HabitModel from "../models/HabitModel";
 import { getHabitKey } from "../utils/HabitKey";
-import HabitModel from "./../models/Habit";
 import Day from "./Day";
 
 interface HabitProps {
@@ -11,7 +12,7 @@ interface HabitProps {
 }
 
 const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
-  const [days, setDays] = useState<boolean[]>([]);
+  const [days, setDays] = useState<HabitDayModel[]>([]);
 
   useEffect(() => {
     setDays(habit.days);
@@ -19,19 +20,17 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
 
   const handleDayToggle = (index: number) => {
     const newDays = [...days];
-    newDays[index] = !newDays[index];
+    newDays[index].active = !newDays[index].active;
     setDays(newDays);
     updateHabitInLocalStorage(newDays);
   };
 
-  const updateHabitInLocalStorage = async (days: boolean[]) => {
+  const updateHabitInLocalStorage = async (days: HabitDayModel[]) => {
     try {
       const updatedHabit: HabitModel = {
         ...habit,
         days
       };
-
-      console.log("Setting habbit: " + getHabitKey(habit.title));
 
       await AsyncStorage.setItem(
         getHabitKey(habit.title),
@@ -40,6 +39,10 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const getDayDate = (date: Date) => {
+    return date.getDate();
   };
 
   return (
@@ -55,11 +58,11 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
         {days.map((day, index) => (
           <Day
             key={index}
-            state={day}
+            active={day.active}
             index={index}
             onDayToggle={handleDayToggle}
           >
-            {index + 1}
+            {day.date.getDate()}
           </Day>
         ))}
       </View>

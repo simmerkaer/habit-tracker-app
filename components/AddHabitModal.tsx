@@ -11,12 +11,12 @@ import {
 } from "react-native";
 import Days from "../models/Days";
 import { DateToString, DaysBetween } from "../utils/DateHelpers";
-import Habit from "./../models/Habit";
+import HabitModel from "./../models/Habit";
 
 interface AddHabitModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (habit: Habit) => void;
+  onSubmit: (habit: HabitModel) => void;
 }
 
 const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
@@ -76,7 +76,7 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
   };
 
   const handleSubmit = () => {
-    const habit: Habit = {
+    const habit: HabitModel = {
       title,
       startDate,
       endDate,

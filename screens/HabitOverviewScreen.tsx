@@ -1,14 +1,22 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { AsyncStorage, Button, StyleSheet, Text, View } from "react-native";
+import {
+  AsyncStorage,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import AddHabitModal from "../components/AddHabitModal";
 import { HABIT_KEY_PREFIX } from "../contants";
 import { getHabitKey } from "../utils/HabitKey";
-import Habit from "./../models/Habit";
+import HabitComponent from "./../components/Habit";
+import HabitModel from "./../models/Habit";
 
 const HabitOverviewScreen = () => {
   const [showModal, setShowModal] = useState(false);
-  const [habits, setHabits] = useState<Habit[]>([]);
+  const [habits, setHabits] = useState<HabitModel[]>([]);
 
   const getAllHabitsFromLocalStorage = async () => {
     try {
@@ -16,7 +24,7 @@ const HabitOverviewScreen = () => {
       const habitKeys = keys.filter(key => key.includes(HABIT_KEY_PREFIX)); // TODO: Replace with regex to make more robust
       const allHabits = await AsyncStorage.multiGet(habitKeys);
 
-      const habitsFromLocalStorage: Habit[] = allHabits.map(x =>
+      const habitsFromLocalStorage: HabitModel[] = allHabits.map(x =>
         JSON.parse(x[1])
       );
       return habitsFromLocalStorage;
@@ -29,19 +37,19 @@ const HabitOverviewScreen = () => {
     // Async function wrapper needed for async functions in useEffect hook
     const fetchHabits = async () => {
       const fetchedHabits = await getAllHabitsFromLocalStorage();
-      console.log(JSON.stringify(fetchedHabits));
       setHabits(fetchedHabits);
+      console.log(fetchedHabits);
     };
 
     fetchHabits();
   }, []);
 
-  const handleSubmitHabit = (habit: Habit) => {
+  const handleSubmitHabit = (habit: HabitModel) => {
     storeHabitInLocalStorage(habit);
     setHabits([...habits, habit]);
   };
 
-  const storeHabitInLocalStorage = async (habit: Habit) => {
+  const storeHabitInLocalStorage = async (habit: HabitModel) => {
     try {
       const habitKey = getHabitKey(habit.title);
       await AsyncStorage.setItem(habitKey, JSON.stringify(habit));
@@ -50,13 +58,28 @@ const HabitOverviewScreen = () => {
     }
   };
 
+  const handleDelete = async (habitTitle: string) => {
+    const habitKey = getHabitKey(habitTitle);
+    await AsyncStorage.removeItem(habitKey);
+
+    const newHabits = habits.filter(habit => habit.title !== habitTitle);
+    setHabits(newHabits);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Habit details</Text>
       <Button title="Add habit" onPress={() => setShowModal(true)} />
-      {habits.map(x => (
-        <Text key={x.title}>{x.title}</Text>
-      ))}
+      <ScrollView style={{ marginTop: 10 }}>
+        <View style={styles.habitsContainer}>
+          {habits.map(habit => (
+            <HabitComponent
+              key={habit.title}
+              habit={habit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </View>
+      </ScrollView>
       <AddHabitModal
         visible={showModal}
         onClose={() => setShowModal(false)}
@@ -67,11 +90,14 @@ const HabitOverviewScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    flexDirection: "column"
+  },
+  habitsContainer: {
+    flex: 1,
+    flexDirection: "column"
   }
 });
 

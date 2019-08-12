@@ -1,6 +1,6 @@
 import Days from "./Days";
 
-interface Habit {
+interface HabitModel {
   title: string;
   startDate: Date;
   endDate: Date;
@@ -8,4 +8,4 @@ interface Habit {
   activeDays: Days[];
 }
 
-export default Habit;
+export default HabitModel;

@@ -15,8 +15,8 @@ const HabitOverviewStack = createStackNavigator({
 });
 
 const MainNavigator = createBottomTabNavigator({
-  YourDayScreen: YourDayStack,
-  HabitOverviewScreen: HabitOverviewStack
+  HabitOverviewScreen: HabitOverviewStack,
+  YourDayScreen: YourDayStack
 });
 
 const App = createAppContainer(MainNavigator);

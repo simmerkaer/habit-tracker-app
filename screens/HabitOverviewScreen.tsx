@@ -1,20 +1,17 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   AsyncStorage,
   Button,
   ScrollView,
   StyleSheet,
-  Text,
   View
 } from "react-native";
 import AddHabitModal from "../components/AddHabitModal";
-import { HABIT_KEY_PREFIX } from "../contants";
 import { useHabits } from "../hooks/useHabits";
 import HabitModel from "../models/HabitModel";
 import { getHabitKey } from "../utils/HabitKey";
 import HabitComponent from "./../components/Habit";
-import { getAllHabitsFromLocalStorage } from "./Helpers";
 
 const HabitOverviewScreen = () => {
   const [showModal, setShowModal] = useState(false);

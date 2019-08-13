@@ -1,23 +1,31 @@
 import * as React from "react";
 import { StyleSheet, Text, TouchableHighlight } from "react-native";
+import { DayStatus } from "../models/HabitDayModel";
 
 interface DayProps {
   index: number;
-  active: boolean;
+  status: DayStatus;
   onDayToggle: (index: number) => void;
 }
 
 const Day: React.FunctionComponent<DayProps> = ({
   children,
   index,
-  active,
+  status,
   onDayToggle
 }) => {
   const handlePress = () => onDayToggle(index);
 
+  const getDayStyle = (dayStatus: DayStatus) => {
+    if (dayStatus === DayStatus.Inactive) return dayStyles.inactiveBox;
+    if (dayStatus === DayStatus.Unchecked) return dayStyles.uncheckedBox;
+    if (dayStatus === DayStatus.Checked) return dayStyles.checkedBox;
+    return dayStyles.missedBox;
+  };
+
   return (
     <TouchableHighlight
-      style={[styles.square, active ? styles.squareOn : styles.squareOff]}
+      style={[styles.square, getDayStyle(status)]}
       onPress={handlePress}
     >
       <Text>{children}</Text>
@@ -40,12 +48,21 @@ const styles = StyleSheet.create({
   touchable: {
     height: 50,
     flexDirection: "row"
+  }
+});
+
+export const dayStyles = StyleSheet.create({
+  inactiveBox: {
+    backgroundColor: "grey"
   },
-  squareOn: {
+  checkedBox: {
     backgroundColor: "green"
   },
-  squareOff: {
+  uncheckedBox: {
     backgroundColor: "red"
+  },
+  missedBox: {
+    backgroundColor: "yellow"
   }
 });
 export default Day;

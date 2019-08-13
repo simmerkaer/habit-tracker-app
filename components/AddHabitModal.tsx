@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import Days from "../models/Days";
 import HabitModel from "../models/HabitModel";
-import { DateToString, DaysBetween } from "../utils/DateHelpers";
-import { HabitDayModel } from "./../models/HabitDayModel";
+import { DateToString } from "../utils/DateHelpers";
+import { DayStatus, HabitDayModel } from "./../models/HabitDayModel";
 
 interface AddHabitModalProps {
   visible: boolean;
@@ -28,7 +28,7 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [days, setDays] = useState<boolean[]>([]);
+  const [] = useState<boolean[]>([]);
   const [activeDays, setActiveDays] = useState(new Array(7).fill(true));
 
   const setStartDateFunction = async () => {
@@ -71,7 +71,9 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
     while (dt <= endDate) {
       arr.push({
         date: new Date(dt),
-        active: false
+        status: activeDays[new Date(dt).getDay()]
+          ? DayStatus.Unchecked
+          : DayStatus.Inactive
       });
       dt.setDate(dt.getDate() + 1);
     }

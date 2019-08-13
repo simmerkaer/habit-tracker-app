@@ -1,4 +1,11 @@
 export interface HabitDayModel {
-  active: boolean;
+  status: DayStatus;
   date: Date;
+}
+
+export enum DayStatus {
+  Unchecked,
+  Checked,
+  Missed,
+  Inactive
 }

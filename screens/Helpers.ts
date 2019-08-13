@@ -18,6 +18,7 @@ export const getAllHabitsFromLocalStorage = async () => {
     return habitsFromLocalStorage;
   } catch (error) {
     console.log(error);
+    return [];
   }
 };
 

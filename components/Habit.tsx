@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { AsyncStorage, Button, StyleSheet, Text, View } from "react-native";
-import { HabitDayModel } from "../models/HabitDayModel";
+import { DayStatus, HabitDayModel } from "../models/HabitDayModel";
 import HabitModel from "../models/HabitModel";
 import { getHabitKey } from "../utils/HabitKey";
 import Day from "./Day";
@@ -18,9 +18,19 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
     setDays(habit.days);
   }, [habit.title]);
 
+  const toggleDay = (status: DayStatus) => {
+    if (status === DayStatus.Checked) {
+      return DayStatus.Unchecked;
+    }
+    if (status === DayStatus.Unchecked) {
+      return DayStatus.Checked;
+    }
+    return DayStatus.Inactive;
+  };
+
   const handleDayToggle = (index: number) => {
     const newDays = [...days];
-    newDays[index].active = !newDays[index].active;
+    newDays[index].status = toggleDay(newDays[index].status);
     setDays(newDays);
     updateHabitInLocalStorage(newDays);
   };
@@ -54,7 +64,7 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
         {days.map((day, index) => (
           <Day
             key={index}
-            active={day.active}
+            status={day.status}
             index={index}
             onDayToggle={handleDayToggle}
           >

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllHabitsFromLocalStorage } from "../screens/Helpers";
+import { isToday } from "../utils/DateHelpers";
 import HabitModel from "./../models/HabitModel";
 import { useNavigation } from "./useNavigation";
 
@@ -25,8 +26,7 @@ export const useDailyHabits = (): [
   const getDailyHabits = (habits: HabitModel[]) => {
     return habits.filter(habit =>
       // Return true if the current habit has a day with "day.date = today"
-      // We use ".toDateString()" to compare dates without time of day.
-      habit.days.find(x => x.date.toDateString() === new Date().toDateString())
+      habit.days.find(x => isToday(x.date))
     );
   };
   return [dailyHabits, setDailyHabits];

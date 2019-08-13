@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import AddHabitModal from "../components/AddHabitModal";
 import { HABIT_KEY_PREFIX } from "../contants";
+import { useHabits } from "../hooks/useHabits";
 import HabitModel from "../models/HabitModel";
 import { getHabitKey } from "../utils/HabitKey";
 import HabitComponent from "./../components/Habit";
@@ -17,17 +18,7 @@ import { getAllHabitsFromLocalStorage } from "./Helpers";
 
 const HabitOverviewScreen = () => {
   const [showModal, setShowModal] = useState(false);
-  const [habits, setHabits] = useState<HabitModel[]>([]);
-
-  useEffect(() => {
-    // Async function wrapper needed for async functions in useEffect hook
-    const fetchHabits = async () => {
-      const fetchedHabits = await getAllHabitsFromLocalStorage();
-      setHabits(fetchedHabits);
-    };
-
-    fetchHabits();
-  }, []);
+  const [habits, setHabits] = useHabits();
 
   const handleSubmitHabit = (habit: HabitModel) => {
     storeHabitInLocalStorage(habit);

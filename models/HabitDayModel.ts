@@ -4,8 +4,8 @@ export interface HabitDayModel {
 }
 
 export enum DayStatus {
-  Unchecked,
-  Checked,
-  Missed,
-  Inactive
+  Unchecked = "Unchecked",
+  Checked = "Checked",
+  Missed = "Missed",
+  Inactive = "Inactive"
 }

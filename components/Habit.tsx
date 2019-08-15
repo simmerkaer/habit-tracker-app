@@ -1,8 +1,9 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { AsyncStorage, Button, StyleSheet, Text, View } from "react-native";
-import { DayStatus, HabitDayModel } from "../models/HabitDayModel";
+import { HabitDayModel } from "../models/HabitDayModel";
 import HabitModel from "../models/HabitModel";
+import { toggleDay } from "../utils/HabitHelpers";
 import { getHabitKey } from "../utils/HabitKey";
 import Day from "./Day";
 
@@ -16,17 +17,7 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
 
   useEffect(() => {
     setDays(habit.days);
-  }, [habit.title]);
-
-  const toggleDay = (status: DayStatus) => {
-    if (status === DayStatus.Checked) {
-      return DayStatus.Unchecked;
-    }
-    if (status === DayStatus.Unchecked) {
-      return DayStatus.Checked;
-    }
-    return DayStatus.Inactive;
-  };
+  }, [habit.title, habit.days]);
 
   const handleDayToggle = (index: number) => {
     const newDays = [...days];

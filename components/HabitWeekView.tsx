@@ -20,7 +20,7 @@ const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
 
   useEffect(() => {
     setDays(habit.days);
-  }, [habit.title]);
+  }, [habit.days]);
 
   const handleDayToggle = () => {
     const newDays = [...days];

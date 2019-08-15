@@ -1,6 +1,7 @@
 import * as React from "react";
 import { StyleSheet, Text, TouchableHighlight } from "react-native";
 import { DayStatus } from "../models/HabitDayModel";
+import { getDayStyle } from "../utils/HabitHelpers";
 
 interface DayProps {
   index: number;
@@ -15,13 +16,6 @@ const Day: React.FunctionComponent<DayProps> = ({
   onDayToggle
 }) => {
   const handlePress = () => onDayToggle(index);
-
-  const getDayStyle = (dayStatus: DayStatus) => {
-    if (dayStatus === DayStatus.Inactive) return dayStyles.inactiveBox;
-    if (dayStatus === DayStatus.Unchecked) return dayStyles.uncheckedBox;
-    if (dayStatus === DayStatus.Checked) return dayStyles.checkedBox;
-    return dayStyles.missedBox;
-  };
 
   return (
     <TouchableHighlight

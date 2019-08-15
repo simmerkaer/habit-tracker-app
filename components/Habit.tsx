@@ -17,7 +17,7 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
 
   useEffect(() => {
     setDays(habit.days);
-  }, [habit.title, habit.days]);
+  }, [habit.days]);
 
   const handleDayToggle = (index: number) => {
     const newDays = [...days];

@@ -15,8 +15,13 @@ export const getHabitDayStyle = (
 ) => {
   const day = habitDays.find(habitDay => isSameDay(habitDay.date, dayOfWeek));
   if (!day) return dayStyles.inactiveBox;
-  if (day.status === DayStatus.Inactive) return dayStyles.inactiveBox;
-  if (day.status === DayStatus.Unchecked) return dayStyles.uncheckedBox;
-  if (day.status === DayStatus.Checked) return dayStyles.checkedBox;
-  return dayStyles.missedBox;
+  return getDayStyle(day.status);
+};
+
+export const getDayStyle = (dayStatus: DayStatus) => {
+  if (dayStatus === DayStatus.Inactive) return dayStyles.inactiveBox;
+  if (dayStatus === DayStatus.Unchecked) return dayStyles.uncheckedBox;
+  if (dayStatus === DayStatus.Checked) return dayStyles.checkedBox;
+  if (dayStatus === DayStatus.Missed) return dayStyles.missedBox;
+  return dayStyles.uncheckedBox;
 };

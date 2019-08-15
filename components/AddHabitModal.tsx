@@ -92,7 +92,9 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
       startDate,
       endDate,
       days: getDateArray(startDate, endDate),
-      activeDays
+      activeDays,
+      currentStreak: 0,
+      longestStreak: 0
     };
 
     onSubmit(habit);

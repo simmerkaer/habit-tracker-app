@@ -1,11 +1,14 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { AsyncStorage, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
+import {
+  calculateStreak,
+  updateHabitDaysInLocalStorage
+} from "../AsyncStorageService";
 import { HabitDayModel } from "../models/HabitDayModel";
 import { GetCurrentWeek, isToday } from "../utils/DateHelpers";
 import { getHabitDayStyle, toggleDay } from "../utils/HabitHelpers";
-import { getHabitKey } from "../utils/HabitKey";
 import HabitModel from "./../models/HabitModel";
 
 interface HabitWeekViewProps {
@@ -17,10 +20,12 @@ const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
   habit
 }) => {
   const [days, setDays] = useState<HabitDayModel[]>([]);
+  const [currentStreak, setCurrentStreak] = useState(0); // Can we avoid tracking streak in state?
 
   useEffect(() => {
     setDays(habit.days);
-  }, [habit.days]);
+    setCurrentStreak(habit.currentStreak);
+  }, [habit.days, habit.currentStreak]);
 
   const handleDayToggle = () => {
     const newDays = [...days];
@@ -29,23 +34,8 @@ const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
     });
 
     setDays(newDays);
-    updateHabitInLocalStorage(newDays);
-  };
-
-  const updateHabitInLocalStorage = async (days: HabitDayModel[]) => {
-    try {
-      const updatedHabit: HabitModel = {
-        ...habit,
-        days
-      };
-
-      await AsyncStorage.setItem(
-        getHabitKey(habit.title),
-        JSON.stringify(updatedHabit)
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    setCurrentStreak(calculateStreak(newDays));
+    updateHabitDaysInLocalStorage(habit.title, newDays);
   };
 
   const renderToday = (index: number, dayOfWeek: Date) => (
@@ -65,7 +55,9 @@ const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
 
   return (
     <View key={habit.title} style={styles.habitRow}>
-      <Text>{habit.title}</Text>
+      <Text>
+        {habit.title} - Streak: {currentStreak}
+      </Text>
       <View style={styles.dayRow}>
         {GetCurrentWeek().map((dayOfWeek, index) =>
           isToday(dayOfWeek)

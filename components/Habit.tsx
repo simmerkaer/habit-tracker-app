@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { AsyncStorage, Button, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { updateHabitDaysInLocalStorage } from "../AsyncStorageService";
 import { HabitDayModel } from "../models/HabitDayModel";
 import HabitModel from "../models/HabitModel";
 import { toggleDay } from "../utils/HabitHelpers";
-import { getHabitKey } from "../utils/HabitKey";
 import Day from "./Day";
 
 interface HabitProps {
@@ -23,23 +23,8 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
     const newDays = [...days];
     newDays[index].status = toggleDay(newDays[index].status);
     setDays(newDays);
-    updateHabitInLocalStorage(newDays);
-  };
 
-  const updateHabitInLocalStorage = async (days: HabitDayModel[]) => {
-    try {
-      const updatedHabit: HabitModel = {
-        ...habit,
-        days
-      };
-
-      await AsyncStorage.setItem(
-        getHabitKey(habit.title),
-        JSON.stringify(updatedHabit)
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    updateHabitDaysInLocalStorage(habit.title, newDays);
   };
 
   return (

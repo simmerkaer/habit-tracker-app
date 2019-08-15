@@ -7,6 +7,8 @@ interface HabitModel {
   endDate: Date;
   days: HabitDayModel[];
   activeDays: Days[];
+  currentStreak: number;
+  longestStreak: number;
 }
 
 export default HabitModel;

@@ -44,19 +44,4 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   }
 });
-
-export const dayStyles = StyleSheet.create({
-  inactiveBox: {
-    backgroundColor: "grey"
-  },
-  checkedBox: {
-    backgroundColor: "green"
-  },
-  uncheckedBox: {
-    backgroundColor: "red"
-  },
-  missedBox: {
-    backgroundColor: "yellow"
-  }
-});
 export default Day;

@@ -1,4 +1,4 @@
-import { dayStyles } from "../components/Day";
+import { StyleSheet } from "react-native";
 import { DayStatus, HabitDayModel } from "../models/HabitDayModel";
 import { isSameDay } from "./DateHelpers";
 
@@ -25,3 +25,18 @@ export const getDayStyle = (dayStatus: DayStatus) => {
   if (dayStatus === DayStatus.Missed) return dayStyles.missedBox;
   return dayStyles.uncheckedBox;
 };
+
+export const dayStyles = StyleSheet.create({
+  inactiveBox: {
+    backgroundColor: "grey"
+  },
+  checkedBox: {
+    backgroundColor: "green"
+  },
+  uncheckedBox: {
+    backgroundColor: "red"
+  },
+  missedBox: {
+    backgroundColor: "yellow"
+  }
+});

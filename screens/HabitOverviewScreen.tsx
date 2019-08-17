@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View
 } from "react-native";
+import { storeHabitInLocalStorage } from "../AsyncStorageService";
 import AddHabitModal from "../components/AddHabitModal";
 import { useHabits } from "../hooks/useHabits";
 import HabitModel from "../models/HabitModel";
@@ -20,15 +21,6 @@ const HabitOverviewScreen = () => {
   const handleSubmitHabit = (habit: HabitModel) => {
     storeHabitInLocalStorage(habit);
     setHabits([...habits, habit]);
-  };
-
-  const storeHabitInLocalStorage = async (habit: HabitModel) => {
-    try {
-      const habitKey = getHabitKey(habit.title);
-      await AsyncStorage.setItem(habitKey, JSON.stringify(habit));
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const handleDelete = async (habitTitle: string) => {

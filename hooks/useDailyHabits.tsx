@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllHabitsFromLocalStorage } from "../screens/Helpers";
+import { getAllHabitsFromLocalStorage } from "../AsyncStorageService";
 import { isToday } from "../utils/DateHelpers";
 import HabitModel from "./../models/HabitModel";
 import { useNavigation } from "./useNavigation";

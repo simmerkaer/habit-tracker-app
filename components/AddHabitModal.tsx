@@ -33,9 +33,14 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
 
   const setStartDateFunction = async () => {
     try {
+      const today = new Date();
+      const firstDayOfLastMonth = new Date(today.getTime());
+      firstDayOfLastMonth.setDate(1);
+      firstDayOfLastMonth.setMonth(firstDayOfLastMonth.getMonth() - 1);
+
       const result = await DatePickerAndroid.open({
-        date: new Date(),
-        minDate: new Date()
+        date: today,
+        minDate: firstDayOfLastMonth
       });
 
       if ("day" && "month" && "year" in result) {
@@ -50,9 +55,11 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
 
   const setEndDateFunction = async () => {
     try {
+      const today = new Date();
+
       const result = await DatePickerAndroid.open({
-        date: new Date(),
-        minDate: new Date()
+        date: today,
+        minDate: today
       });
 
       if ("day" && "month" && "year" in result) {
@@ -137,6 +144,7 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
             </View>
           ))}
         </View>
+
         <View style={styles.addButton}>
           <Button title="Add" onPress={handleSubmit} />
         </View>

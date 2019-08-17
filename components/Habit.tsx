@@ -5,7 +5,7 @@ import {
   calculateStreak,
   updateHabitInLocalStorage
 } from "../AsyncStorageService";
-import { HabitDayModel } from "../models/HabitDayModel";
+import { DayStatus, HabitDayModel } from "../models/HabitDayModel";
 import HabitModel from "../models/HabitModel";
 import { toggleDay } from "../utils/HabitHelpers";
 import Day from "./Day";
@@ -38,6 +38,24 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
     });
   };
 
+  const renderFillerDays = () => {
+    const startDay = habit.startDate.getDay();
+    return [...Array(startDay).keys()].map(i => {
+      const date = new Date(habit.startDate.getTime());
+      date.setDate(date.getDate() - startDay + i);
+      return (
+        <Day
+          key={i}
+          status={DayStatus.Inactive}
+          index={i}
+          onDayToggle={() => null}
+        >
+          {date.getDate()}
+        </Day>
+      );
+    });
+  };
+
   return (
     <View style={styles.habitContainer}>
       <View style={styles.habitHeader}>
@@ -48,6 +66,7 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
         </View>
       </View>
       <View style={styles.dayGrid}>
+        {renderFillerDays()}
         {days.map((day, index) => (
           <Day
             key={index}

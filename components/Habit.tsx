@@ -1,7 +1,10 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
-import { updateHabitDaysInLocalStorage } from "../AsyncStorageService";
+import {
+  calculateStreak,
+  updateHabitInLocalStorage
+} from "../AsyncStorageService";
 import { HabitDayModel } from "../models/HabitDayModel";
 import HabitModel from "../models/HabitModel";
 import { toggleDay } from "../utils/HabitHelpers";
@@ -24,7 +27,15 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
     newDays[index].status = toggleDay(newDays[index].status);
     setDays(newDays);
 
-    updateHabitDaysInLocalStorage(habit.title, newDays);
+    const currentStreak = calculateStreak(newDays);
+    updateHabitInLocalStorage(habit.title, {
+      days: newDays,
+      currentStreak,
+      longestStreak:
+        habit.longestStreak < currentStreak
+          ? currentStreak
+          : habit.longestStreak
+    });
   };
 
   return (

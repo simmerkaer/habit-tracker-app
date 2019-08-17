@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import {
   calculateStreak,
-  updateHabitDaysInLocalStorage
+  updateHabitInLocalStorage
 } from "../AsyncStorageService";
 import { HabitDayModel } from "../models/HabitDayModel";
 import { GetCurrentWeek, isToday } from "../utils/DateHelpers";
@@ -13,7 +13,6 @@ import HabitModel from "./../models/HabitModel";
 
 interface HabitWeekViewProps {
   habit: HabitModel;
-  // onTodayPress: () => void;
 }
 
 const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
@@ -33,9 +32,18 @@ const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
       if (isToday(day.date)) day.status = toggleDay(day.status);
     });
 
+    const currentStreak = calculateStreak(newDays);
+
     setDays(newDays);
-    setCurrentStreak(calculateStreak(newDays));
-    updateHabitDaysInLocalStorage(habit.title, newDays);
+    setCurrentStreak(currentStreak);
+    updateHabitInLocalStorage(habit.title, {
+      days: newDays,
+      currentStreak,
+      longestStreak:
+        habit.longestStreak < currentStreak
+          ? currentStreak
+          : habit.longestStreak
+    });
   };
 
   const renderToday = (index: number, dayOfWeek: Date) => (

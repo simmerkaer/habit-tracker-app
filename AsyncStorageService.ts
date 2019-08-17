@@ -4,17 +4,14 @@ import { DayStatus, HabitDayModel } from "./models/HabitDayModel";
 import HabitModel from "./models/HabitModel";
 import { getHabitKey } from "./utils/HabitKey";
 
-export const updateHabitDaysInLocalStorage = async (
+export const updateHabitInLocalStorage = async (
   habitToUpdate: string,
-  updatedDays: HabitDayModel[]
+  habitProperties: object
 ) => {
   try {
     await AsyncStorage.mergeItem(
       getHabitKey(habitToUpdate),
-      JSON.stringify({
-        days: updatedDays,
-        currentStreak: calculateStreak(updatedDays)
-      })
+      JSON.stringify(habitProperties)
     );
   } catch (error) {
     console.log(error);

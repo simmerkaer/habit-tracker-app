@@ -1,3 +1,4 @@
+import moment from "moment";
 import React, { useState } from "react";
 import {
   Button,
@@ -33,13 +34,12 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
 
   const setStartDateFunction = async () => {
     try {
-      const today = new Date();
-      const firstDayOfLastMonth = new Date(today.getTime());
-      firstDayOfLastMonth.setDate(1);
-      firstDayOfLastMonth.setMonth(firstDayOfLastMonth.getMonth() - 1);
+      const firstDayOfLastMonth = moment()
+        .startOf("month")
+        .toDate();
 
       const result = await DatePickerAndroid.open({
-        date: today,
+        date: new Date(),
         minDate: firstDayOfLastMonth
       });
 
@@ -55,11 +55,9 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
 
   const setEndDateFunction = async () => {
     try {
-      const today = new Date();
-
       const result = await DatePickerAndroid.open({
-        date: today,
-        minDate: today
+        date: new Date(),
+        minDate: new Date()
       });
 
       if ("day" && "month" && "year" in result) {

@@ -6,14 +6,32 @@ import {
   calculateStreak,
   updateHabitInLocalStorage
 } from "../AsyncStorageService";
-import { HabitDayModel } from "../models/HabitDayModel";
-import { GetCurrentWeek, isToday } from "../utils/DateHelpers";
-import { getHabitDayStyle, toggleDay } from "../utils/HabitHelpers";
+import { DayStatus, HabitDayModel } from "../models/HabitDayModel";
+import { isToday } from "../utils/DateHelpers";
+import { getDayStyle, toggleDay } from "../utils/HabitHelpers";
 import HabitModel from "./../models/HabitModel";
 
 interface HabitWeekViewProps {
   habit: HabitModel;
 }
+
+export const getLastFive = (days: HabitDayModel[]) => {
+  const lastFiveArray = [];
+  const indexOfToday = days.findIndex(x => isToday(x.date));
+
+  let i;
+  for (i = 5; i > 0; i--) {
+    const index = indexOfToday - i;
+    const status =
+      index >= 0 && index < days.length
+        ? days[index].status
+        : DayStatus.OutOfBound;
+
+    lastFiveArray.push(status);
+  }
+
+  return lastFiveArray;
+};
 
 const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
   habit
@@ -46,20 +64,7 @@ const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
     });
   };
 
-  const renderToday = (index: number, dayOfWeek: Date) => (
-    <TouchableHighlight
-      key={index}
-      onPress={handleDayToggle}
-      style={[styles.todayBox, getHabitDayStyle(days, dayOfWeek)]}
-    />
-  );
-
-  const renderNotToday = (key: number, dayOfWeek: Date) => (
-    <View
-      key={key}
-      style={[styles.notTodayBox, getHabitDayStyle(days, dayOfWeek)]}
-    />
-  );
+  const today = days.find(x => isToday(x.date));
 
   return (
     <View key={habit.title} style={styles.habitRow}>
@@ -67,11 +72,16 @@ const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
         {habit.title} - Streak: {currentStreak}
       </Text>
       <View style={styles.dayRow}>
-        {GetCurrentWeek().map((dayOfWeek, index) =>
-          isToday(dayOfWeek)
-            ? renderToday(index, dayOfWeek)
-            : renderNotToday(index, dayOfWeek)
+        {today && (
+          <TouchableHighlight onPress={handleDayToggle}>
+            <View style={[styles.todayBox, getDayStyle(today.status)]} />
+          </TouchableHighlight>
         )}
+        {getLastFive(days)
+          .reverse()
+          .map((x, i) => (
+            <View key={i} style={[styles.notTodayBox, getDayStyle(x)]} />
+          ))}
       </View>
     </View>
   );

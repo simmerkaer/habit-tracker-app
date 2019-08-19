@@ -7,5 +7,6 @@ export enum DayStatus {
   Unchecked = "Unchecked",
   Checked = "Checked",
   Missed = "Missed",
-  Inactive = "Inactive"
+  Inactive = "Inactive",
+  OutOfBound = "OutOfBound"
 }

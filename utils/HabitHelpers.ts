@@ -23,6 +23,7 @@ export const getDayStyle = (dayStatus: DayStatus) => {
   if (dayStatus === DayStatus.Unchecked) return dayStyles.uncheckedBox;
   if (dayStatus === DayStatus.Checked) return dayStyles.checkedBox;
   if (dayStatus === DayStatus.Missed) return dayStyles.missedBox;
+  if (dayStatus === DayStatus.OutOfBound) return dayStyles.outOfBound;
   return dayStyles.uncheckedBox;
 };
 
@@ -38,5 +39,10 @@ export const dayStyles = StyleSheet.create({
   },
   missedBox: {
     backgroundColor: "yellow"
+  },
+  outOfBound: {
+    backgroundColor: "white",
+    borderColor: "black",
+    borderWidth: 1
   }
 });

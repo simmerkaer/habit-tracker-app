@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { DayStatus, HabitDayModel } from "../models/HabitDayModel";
-import { isSameDay } from "./DateHelpers";
+import { isSameDay, isToday } from "./DateHelpers";
 
 export const toggleDay = (status: DayStatus) => {
   if (status === DayStatus.Unchecked) return DayStatus.Checked;
@@ -46,3 +46,28 @@ export const dayStyles = StyleSheet.create({
     borderWidth: 1
   }
 });
+
+export const getLastFiveHabitDays = (days: HabitDayModel[]) => {
+  const lastFiveArray = [];
+  const indexOfToday = days.findIndex(x => isToday(x.date));
+
+  let i = 1;
+  while (lastFiveArray.length <= 4) {
+    const index = indexOfToday - i;
+
+    if (index < 0) {
+      // If we are before the habit started, push an "OutOfBound" and increase "i"
+      lastFiveArray.push(DayStatus.OutOfBound);
+      ++i;
+    } else {
+      // Else we get the day and add the status unless the status is "Inactive"
+      const day = days[index];
+      if (day.status !== DayStatus.Inactive) {
+        lastFiveArray.push(day.status);
+      }
+      ++i;
+    }
+  }
+
+  return lastFiveArray;
+};

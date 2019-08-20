@@ -6,32 +6,18 @@ import {
   calculateStreak,
   updateHabitInLocalStorage
 } from "../AsyncStorageService";
-import { DayStatus, HabitDayModel } from "../models/HabitDayModel";
+import { HabitDayModel } from "../models/HabitDayModel";
 import { isToday } from "../utils/DateHelpers";
-import { getDayStyle, toggleDay } from "../utils/HabitHelpers";
+import {
+  getDayStyle,
+  getLastFiveHabitDays,
+  toggleDay
+} from "../utils/HabitHelpers";
 import HabitModel from "./../models/HabitModel";
 
 interface HabitWeekViewProps {
   habit: HabitModel;
 }
-
-export const getLastFive = (days: HabitDayModel[]) => {
-  const lastFiveArray = [];
-  const indexOfToday = days.findIndex(x => isToday(x.date));
-
-  let i;
-  for (i = 5; i > 0; i--) {
-    const index = indexOfToday - i;
-    const status =
-      index >= 0 && index < days.length
-        ? days[index].status
-        : DayStatus.OutOfBound;
-
-    lastFiveArray.push(status);
-  }
-
-  return lastFiveArray;
-};
 
 const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
   habit
@@ -77,11 +63,9 @@ const HabitWeekView: React.FunctionComponent<HabitWeekViewProps> = ({
             <View style={[styles.todayBox, getDayStyle(today.status)]} />
           </TouchableHighlight>
         )}
-        {getLastFive(days)
-          .reverse()
-          .map((x, i) => (
-            <View key={i} style={[styles.notTodayBox, getDayStyle(x)]} />
-          ))}
+        {getLastFiveHabitDays(days).map((x, i) => (
+          <View key={i} style={[styles.notTodayBox, getDayStyle(x)]} />
+        ))}
       </View>
     </View>
   );

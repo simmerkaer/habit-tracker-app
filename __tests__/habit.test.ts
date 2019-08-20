@@ -1,10 +1,10 @@
 import moment from "moment";
-import { getLastFive } from "../components/HabitWeekView";
 import { DayStatus, HabitDayModel } from "../models/HabitDayModel";
+import { getLastFiveHabitDays } from "../utils/HabitHelpers";
 const habitDays: HabitDayModel[] = [
   {
     date: moment()
-      .add(-100, "day")
+      .add(-8, "day")
       .toDate(),
     status: DayStatus.Checked
   },
@@ -24,7 +24,7 @@ const habitDays: HabitDayModel[] = [
     date: moment()
       .add(-100, "day")
       .toDate(),
-    status: DayStatus.Checked
+    status: DayStatus.Inactive
   },
   {
     date: moment()
@@ -42,7 +42,7 @@ const habitDays: HabitDayModel[] = [
     date: moment()
       .add(-100, "day")
       .toDate(),
-    status: DayStatus.Checked
+    status: DayStatus.Inactive
   },
   {
     date: moment()
@@ -58,27 +58,29 @@ const habitDays: HabitDayModel[] = [
   }
 ];
 
-describe("getLastFive", () => {
-  it("gets the status of the last 5 days", () => {
+describe("getLastFiveHabitDays", () => {
+  it("gets the status of the last 5 days active days", () => {
     const testData = [...habitDays];
-    testData[6].date = moment().toDate();
-    const lastFive = getLastFive(habitDays);
+    testData[8].date = moment().toDate();
+    const lastFive = getLastFiveHabitDays(testData);
     expect(lastFive).toHaveLength(5);
   });
-  it("still works of array is shorter than 5", () => {
+  it("returns 5 statuses even if it's first day of habit", () => {
     const testData = [...habitDays];
     testData[2].date = moment().toDate();
-    const lastFive = getLastFive(habitDays);
+    const lastFive = getLastFiveHabitDays(testData);
     expect(lastFive).toHaveLength(5);
   });
-  it("fills null days with Status.OutOfBound", () => {
+  it("return Status.OutOfBound for days before habit started", () => {
     const testData = [...habitDays];
     testData[1].date = moment().toDate();
-    const lastFive = getLastFive(habitDays);
-    expect(lastFive[0]).toEqual(DayStatus.OutOfBound);
-    expect(lastFive[1]).toEqual(DayStatus.OutOfBound);
-    expect(lastFive[2]).toEqual(DayStatus.OutOfBound);
-    expect(lastFive[3]).toEqual(DayStatus.OutOfBound);
-    expect(lastFive[4]).toEqual(DayStatus.Checked);
+    const lastFive = getLastFiveHabitDays(testData);
+    expect(lastFive).toEqual([
+      DayStatus.Checked,
+      DayStatus.OutOfBound,
+      DayStatus.OutOfBound,
+      DayStatus.OutOfBound,
+      DayStatus.OutOfBound
+    ]);
   });
 });

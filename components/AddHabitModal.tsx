@@ -27,9 +27,12 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
   onSubmit
 }) => {
   const [title, setTitle] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [] = useState<boolean[]>([]);
+  const [startDate, setStartDate] = useState(moment().toDate());
+  const [endDate, setEndDate] = useState(
+    moment()
+      .add(1, "day")
+      .toDate()
+  );
   const [activeDays, setActiveDays] = useState(new Array(7).fill(true));
 
   const setStartDateFunction = async () => {
@@ -70,7 +73,7 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
     }
   };
 
-  const getDateArray = (startDate: Date, endDate: Date) => {
+  const calculateDays = (startDate: Date, endDate: Date) => {
     const arr = new Array<HabitDayModel>();
     const dt = new Date(startDate);
     while (dt <= endDate) {
@@ -96,15 +99,27 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
       title,
       startDate,
       endDate,
-      days: getDateArray(startDate, endDate),
+      days: calculateDays(startDate, endDate),
       activeDays,
       currentStreak: 0,
       longestStreak: 0
     };
 
+    // Reset form
+    setTitle("");
+    setStartDate(moment().toDate());
+    setEndDate(
+      moment()
+        .add(1, "day")
+        .toDate()
+    );
+    setActiveDays(Array(7).fill(true));
+
     onSubmit(habit);
     onClose();
   };
+
+  const invalidDates = endDate <= startDate;
 
   return (
     <Modal
@@ -143,8 +158,9 @@ const AddHabitModal: React.FunctionComponent<AddHabitModalProps> = ({
           ))}
         </View>
 
+        {invalidDates && <Text>End-date can not be before start-date!</Text>}
         <View style={styles.addButton}>
-          <Button title="Add" onPress={handleSubmit} />
+          <Button disabled={invalidDates} title="Add" onPress={handleSubmit} />
         </View>
       </View>
     </Modal>

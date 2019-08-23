@@ -1,5 +1,6 @@
+import { Ionicons } from "@expo/vector-icons";
 import * as React from "react";
-import { StyleSheet, Text, TouchableHighlight } from "react-native";
+import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import { DayStatus } from "../models/HabitDayModel";
 import { getDayStyle } from "../utils/HabitHelpers";
 
@@ -22,15 +23,27 @@ const Day: React.FunctionComponent<DayProps> = ({
       style={[styles.square, getDayStyle(status)]}
       onPress={handlePress}
     >
-      <Text>{children}</Text>
+      <View style={styles.dayContainer}>
+        <Text style={styles.dateContainer}>{children}</Text>
+        <View style={styles.crossContainer}>
+          {status === DayStatus.Checked && (
+            <Ionicons name="md-close" size={30} />
+          )}
+        </View>
+      </View>
     </TouchableHighlight>
   );
 };
 const styles = StyleSheet.create({
-  container: {
+  dayContainer: {
     flex: 1,
-    flexDirection: "row",
-    flexWrap: "wrap"
+    alignItems: "center"
+  },
+  dateContainer: {
+    flex: 1
+  },
+  crossContainer: {
+    flex: 2
   },
   square: {
     height: 50,
@@ -38,10 +51,6 @@ const styles = StyleSheet.create({
     width: "14.28%",
     borderColor: "white",
     borderWidth: 1
-  },
-  touchable: {
-    height: 50,
-    flexDirection: "row"
   }
 });
 export default Day;

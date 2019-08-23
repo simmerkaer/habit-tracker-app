@@ -5,6 +5,7 @@ import {
   calculateStreak,
   updateHabitInLocalStorage
 } from "../AsyncStorageService";
+import { COLORS } from "../contants";
 import { DayStatus, HabitDayModel } from "../models/HabitDayModel";
 import HabitModel from "../models/HabitModel";
 import { toggleDay } from "../utils/HabitHelpers";
@@ -59,10 +60,14 @@ const Habit: React.FunctionComponent<HabitProps> = ({ habit, onDelete }) => {
   return (
     <View style={styles.habitContainer}>
       <View style={styles.habitHeader}>
-        <Text>{habit.title}</Text>
+        <Text style={styles.habitTitle}>{habit.title}</Text>
         <View style={styles.habitButtons}>
-          <Button title="Info" onPress={() => null} />
-          <Button title="Delete habit" onPress={() => onDelete(habit.title)} />
+          {/* <Button title="Info" onPress={() => null} color={COLORS.grayblue} /> */}
+          <Button
+            title="Delete habit"
+            onPress={() => onDelete(habit.title)}
+            color={COLORS.grayblue}
+          />
         </View>
       </View>
       <View style={styles.dayGrid}>
@@ -93,6 +98,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingLeft: 5,
     alignItems: "baseline"
+  },
+  habitTitle: {
+    color: COLORS.offwhite
   },
   habitButtons: {
     marginLeft: "auto",

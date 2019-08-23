@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AsyncStorage,
   Button,
@@ -9,7 +9,9 @@ import {
 } from "react-native";
 import { storeHabitInLocalStorage } from "../AsyncStorageService";
 import AddHabitModal from "../components/AddHabitModal";
+import { COLORS } from "../contants";
 import { useHabits } from "../hooks/useHabits";
+import { useNavigation } from "../hooks/useNavigation";
 import HabitModel from "../models/HabitModel";
 import { getHabitKey } from "../utils/HabitKey";
 import HabitComponent from "./../components/Habit";
@@ -17,6 +19,7 @@ import HabitComponent from "./../components/Habit";
 const HabitOverviewScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [habits, setHabits] = useHabits();
+  const navigation = useNavigation();
 
   const handleSubmitHabit = (habit: HabitModel) => {
     storeHabitInLocalStorage(habit);
@@ -31,14 +34,16 @@ const HabitOverviewScreen = () => {
     setHabits(newHabits);
   };
 
-  const delete2 = async () => {
-    AsyncStorage.clear();
+  const openModal = () => {
+    setShowModal(true);
   };
+
+  useEffect(() => {
+    navigation.setParams({ openModal });
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Button title="Add habit 2" onPress={() => setShowModal(true)} />
-      <Button title="delete" onPress={delete2} />
       <ScrollView style={{ marginTop: 10 }}>
         <View style={styles.habitsContainer}>
           {habits.map(habit => (
@@ -63,7 +68,8 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   container: {
     flex: 1,
-    flexDirection: "column"
+    flexDirection: "column",
+    backgroundColor: "#2B2D42"
   },
   habitsContainer: {
     flex: 1,
@@ -71,9 +77,26 @@ const styles = StyleSheet.create({
   }
 });
 
-HabitOverviewScreen.navigationOptions = {
-  title: "Habit Overview",
-  headerTitle: "Test"
+HabitOverviewScreen.navigationOptions = ({
+  navigation
+}: {
+  navigation: any;
+}) => {
+  return {
+    title: "Habit Overview2",
+    headerTitle: "All habits",
+    headerStyle: {
+      backgroundColor: COLORS.gunmetal
+    },
+    headerTintColor: COLORS.offwhite,
+    headerRight: (
+      <Button
+        title="Add habit"
+        onPress={navigation.getParam("openModal")}
+        color={COLORS.grayblue}
+      />
+    )
+  };
 };
 
 export default HabitOverviewScreen;

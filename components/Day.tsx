@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as React from "react";
 import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
+import { COLORS } from "../contants";
 import { DayStatus } from "../models/HabitDayModel";
 import { getDayStyle } from "../utils/HabitHelpers";
 
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     height: 50,
     margin: 0,
     width: "14.28%",
-    borderColor: "white",
+    borderColor: COLORS.gunmetal,
     borderWidth: 1
   }
 });
